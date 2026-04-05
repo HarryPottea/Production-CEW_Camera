@@ -76,7 +76,18 @@ const globalExcludeTerms = [
 
 const brandSpecificExclude: Record<string, string[]> = {
   Blackmagic: ["davinci resolve", "video assist", "streaming", "atem", "android", "ios", "blackmagic camera 3", "camera 10."],
-  Nikon: ["thousand and one nights", "a new article", "story", "z series special content"],
+  Nikon: [
+    "thousand and one nights",
+    "a new article",
+    "story",
+    "z series special content",
+    "binocular",
+    "binoculars",
+    "monarch",
+    "prostaff",
+    "fieldscope",
+    "stabilized",
+  ],
   Sony: ["semiconductor solutions", "security cameras", "projector", "accessibility for all"],
   Canon: ["toner", "printer", "lithography", "patent", "wafer", "office", "medical"],
 };
