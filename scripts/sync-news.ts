@@ -34,7 +34,7 @@ function toStatus(publishedAt: string): EquipmentStatus {
 }
 
 function normalizeWhitespace(value: string) {
-  return value.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  return value.replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim();
 }
 
 function slugify(value: string) {
@@ -48,7 +48,7 @@ function slugify(value: string) {
 function inferModel(title: string) {
   return title
     .replace(/^(sony|canon|nikon|blackmagic|red)\s*/i, "")
-    .replace(/(introduces|announces|launches|releases|unveils)/gi, "")
+    .replace(/(introduces|announces|launches|releases|unveils|develops|delivers)/gi, "")
     .replace(/\s+/g, " ")
     .trim()
     .slice(0, 120);
@@ -59,26 +59,11 @@ function matchesKeywords(text: string, keywords: string[]) {
   return keywords.some((keyword) => haystack.includes(keyword.toLowerCase()));
 }
 
-async function fetchJson(url: string) {
-  const response = await fetch(url, {
-    headers: {
-      "user-agent": "Production-CEW-Camera-Bot/1.0",
-      accept: "application/json,text/plain,*/*",
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`);
-  }
-
-  return response.json();
-}
-
 async function fetchText(url: string) {
   const response = await fetch(url, {
     headers: {
       "user-agent": "Production-CEW-Camera-Bot/1.0",
-      accept: "application/rss+xml,application/xml,text/xml,text/plain,*/*",
+      accept: "application/rss+xml,application/xml,text/xml,text/html,text/plain,*/*",
     },
   });
 
@@ -120,49 +105,72 @@ function parseRssItems(xml: string, source: SourceConfig): FeedCandidate[] {
   return candidates;
 }
 
-function parseSonyJson(payload: any, source: SourceConfig): FeedCandidate[] {
-  const list = Array.isArray(payload?.items) ? payload.items : Array.isArray(payload) ? payload : [];
+function parseCanonHtml(html: string, source: SourceConfig): FeedCandidate[] {
+  const candidates: FeedCandidate[] = [];
+  const yearBlocks = html.match(/<a href="\/en\/news\/\d{4}\/[^"#]+\.html"[\s\S]*?<\/a>/g) || [];
 
-  return list
-    .map((item: any) => ({
-      title: normalizeWhitespace(item.title || item.headline || ""),
-      url: item.url || item.link || "",
-      publishedAt: new Date(item.date || item.published_at || Date.now()).toISOString(),
-      summary: normalizeWhitespace(item.summary || item.teaser || ""),
+  for (const block of yearBlocks) {
+    const href = block.match(/href="([^"]+)"/)?.[1] || "";
+    const title = normalizeWhitespace(block);
+    const dateMatch = block.match(/([A-Z][a-z]+\.? \d{1,2}, \d{4}|\d{4}\.\d{2}\.\d{2}|\d{4}\/\d{2}\/\d{2})/);
+    const publishedAt = new Date(dateMatch?.[1] || Date.now()).toISOString();
+
+    if (!href || !title) continue;
+    if (!matchesKeywords(title, source.keywords)) continue;
+
+    candidates.push({
+      title,
+      url: new URL(href, source.url).toString(),
+      publishedAt,
+      summary: title,
       brand: source.brand,
       category: source.category,
-    }))
-    .filter((item) => item.title && item.url)
-    .filter((item) => matchesKeywords(`${item.title} ${item.summary}`, source.keywords));
+    });
+  }
+
+  return candidates;
 }
 
-function parseCanonJson(payload: any, source: SourceConfig): FeedCandidate[] {
-  const list = Array.isArray(payload?.news) ? payload.news : Array.isArray(payload) ? payload : [];
+function parseSonyHtml(html: string, source: SourceConfig): FeedCandidate[] {
+  const candidates: FeedCandidate[] = [];
+  const itemRegex = /<a[^>]+href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g;
 
-  return list
-    .map((item: any) => ({
-      title: normalizeWhitespace(item.title || ""),
-      url: item.url || item.link || "",
-      publishedAt: new Date(item.date || item.published_at || Date.now()).toISOString(),
-      summary: normalizeWhitespace(item.summary || item.description || ""),
+  for (const match of html.matchAll(itemRegex)) {
+    const href = match[1];
+    const anchorText = normalizeWhitespace(match[2]);
+
+    if (!href || !anchorText) continue;
+    if (!href.includes("sony.mediaroom.com") && !href.startsWith("/")) continue;
+    if (!matchesKeywords(anchorText, source.keywords)) continue;
+
+    const dateMatch = html.slice(Math.max(0, match.index! - 40), match.index! + 20).match(/(\d{2}\/\d{2}\/\d{4})/);
+    const publishedAt = dateMatch
+      ? new Date(dateMatch[1].replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3-$1-$2")).toISOString()
+      : new Date().toISOString();
+
+    candidates.push({
+      title: anchorText,
+      url: new URL(href, source.url).toString(),
+      publishedAt,
+      summary: anchorText,
       brand: source.brand,
       category: source.category,
-    }))
-    .filter((item) => item.title && item.url)
-    .filter((item) => matchesKeywords(`${item.title} ${item.summary}`, source.keywords));
+    });
+  }
+
+  return candidates;
 }
 
 async function collectFromSource(source: SourceConfig): Promise<FeedCandidate[]> {
   try {
+    const body = await fetchText(source.url);
+
     if (source.type === "rss") {
-      const xml = await fetchText(source.url);
-      return parseRssItems(xml, source);
+      return parseRssItems(body, source);
     }
 
-    const payload = await fetchJson(source.url);
-
-    if (source.brand === "Sony") return parseSonyJson(payload, source);
-    if (source.brand === "Canon") return parseCanonJson(payload, source);
+    if (source.brand === "Canon") return parseCanonHtml(body, source);
+    if (source.brand === "Sony") return parseSonyHtml(body, source);
 
     return [];
   } catch (error) {
@@ -185,7 +193,7 @@ function toEquipmentItem(candidate: FeedCandidate): EquipmentItem {
     official_url: candidate.url,
     manual_url: null,
     firmware_url: null,
-    featured: false,
+    featured: /burano|venice|alpha|fx|eos|cinema|nikkor|pyxis|ursa/i.test(candidate.title),
     is_published: true,
     source_title: candidate.title,
   };
@@ -237,9 +245,7 @@ async function syncToSupabase(items: EquipmentItem[]) {
 async function main() {
   const allCandidates = (await Promise.all(sourceConfigs.map((source) => collectFromSource(source)))).flat();
 
-  const deduped = Array.from(
-    new Map(allCandidates.map((item) => [`${item.brand}:${item.url}`, item])).values(),
-  )
+  const deduped = Array.from(new Map(allCandidates.map((item) => [`${item.brand}:${item.url}`, item])).values())
     .sort((a, b) => +new Date(b.publishedAt) - +new Date(a.publishedAt))
     .slice(0, 100)
     .map(toEquipmentItem);

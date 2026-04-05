@@ -1,6 +1,6 @@
 export interface SourceConfig {
   brand: string;
-  type: "rss" | "json";
+  type: "rss" | "html";
   url: string;
   category: string;
   keywords: string[];
@@ -10,7 +10,7 @@ export const sourceConfigs: SourceConfig[] = [
   {
     brand: "Nikon",
     type: "rss",
-    url: "https://www.nikon.com/company/rss/news.xml",
+    url: "https://www.nikon.com/company/rss/feeds/imaging.rss",
     category: "Camera",
     keywords: ["camera", "lens", "z mount", "nikkor", "cinema", "video"],
   },
@@ -23,16 +23,16 @@ export const sourceConfigs: SourceConfig[] = [
   },
   {
     brand: "Canon",
-    type: "json",
-    url: "https://global.canon/en/news/json/news.json",
+    type: "html",
+    url: "https://global.canon/en/news/",
     category: "Camera",
-    keywords: ["camera", "lens", "cinema eos", "eos", "rf", "video"],
+    keywords: ["camera", "lens", "cinema eos", "eos", "rf", "video", "sensor"],
   },
   {
     brand: "Sony",
-    type: "json",
-    url: "https://sony.mediaroom.com/json?o=20",
+    type: "html",
+    url: "https://sony.mediaroom.com/",
     category: "Camera",
-    keywords: ["camera", "cinema", "alpha", "burano", "venice", "lens"],
+    keywords: ["camera", "cinema", "alpha", "burano", "venice", "lens", "sensor"],
   },
 ];
