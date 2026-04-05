@@ -258,7 +258,7 @@ export default function CameraTeamHub() {
             </div>
           </div>
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="mt-6 grid gap-3 sm:mt-8 sm:gap-4 sm:grid-cols-2 xl:grid-cols-4">
             <StatCard title="전체 장비" value={equipmentData.length} subtext="수집/등록된 항목" icon={Camera} />
             <StatCard title="출시 예정" value={upcoming.length} subtext="곧 체크할 신제품" icon={CalendarDays} />
             <StatCard title="신규 발표" value={announcedOnly.length} subtext="최근 공식 발표" icon={Bell} />
@@ -275,7 +275,7 @@ export default function CameraTeamHub() {
             </div>
 
             <TabsContent value="dashboard" className="space-y-8 outline-none">
-              <div className="grid gap-6 xl:gap-8 lg:grid-cols-[1.15fr_0.85fr]">
+              <div className="grid gap-5 xl:gap-8 lg:grid-cols-[1.15fr_0.85fr]">
                 <Card className="overflow-hidden border-white/10 bg-white/5 backdrop-blur-xl">
                   <CardHeader className="border-b border-white/8 pb-6">
                     <div className="flex items-center gap-2 text-orange-200">
@@ -290,7 +290,7 @@ export default function CameraTeamHub() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="p-5 sm:p-6">
-                    <div className="grid gap-4 md:grid-cols-2">
+                    <div className="grid gap-4 sm:grid-cols-2">
                       {featured.map((item) => (
                         <div key={item.id} className="group rounded-[1.5rem] border border-white/10 bg-black/20 p-5 transition-all hover:border-orange-400/30 hover:bg-black/30">
                           <div className="flex items-start justify-between gap-3">
@@ -370,7 +370,7 @@ export default function CameraTeamHub() {
             <TabsContent value="equipment" className="space-y-6 outline-none">
               <Card className="border-white/10 bg-white/5 backdrop-blur-xl">
                 <CardContent className="p-4 sm:p-6 md:p-8">
-                  <div className="mb-6 flex flex-col gap-3 lg:flex-row lg:items-center">
+                  <div className="mb-5 flex flex-col gap-3 lg:mb-6 lg:flex-row lg:items-center">
                     <div className="relative flex-1">
                       <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/35" />
                       <Input
@@ -414,10 +414,49 @@ export default function CameraTeamHub() {
                     </div>
                   </div>
 
-                  <div className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-black/20">
-                    <div className="overflow-x-auto">
-                      <Table className="min-w-[980px]">
-                        <TableHeader className="bg-white/5">
+                  <div className="space-y-3 sm:space-y-0">
+                    <div className="grid gap-3 sm:hidden">
+                      {filtered.length > 0 ? (
+                        filtered.map((item) => (
+                          <div key={item.id} className="rounded-[1.25rem] border border-white/10 bg-black/20 p-4">
+                            <div className="flex items-start justify-between gap-3">
+                              <Badge variant="outline" className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-white">
+                                {item.brand}
+                              </Badge>
+                              <EquipmentStatusBadge status={item.status} />
+                            </div>
+                            <h3 className="mt-4 text-base font-semibold text-white">{item.model}</h3>
+                            <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/75">
+                              {React.createElement(getCategoryIcon(item.category), { className: "h-3.5 w-3.5" })}
+                              <span>{item.category}</span>
+                            </div>
+                            <div className="mt-4 flex items-center justify-between gap-3 text-xs text-white/50">
+                              <span>발표일 {item.announced_at}</span>
+                              {getPrimaryLink(item) ? (
+                                <a
+                                  href={getPrimaryLink(item)!}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-white"
+                                >
+                                  보기
+                                  <ArrowUpRight className="h-3.5 w-3.5" />
+                                </a>
+                              ) : null}
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="rounded-[1.25rem] border border-white/10 bg-black/20 p-5 text-center text-sm text-white/45">
+                          검색 조건에 맞는 장비가 없습니다.
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="hidden overflow-hidden rounded-[1.5rem] border border-white/10 bg-black/20 sm:block">
+                      <div className="overflow-x-auto">
+                        <Table className="min-w-[980px]">
+                          <TableHeader className="bg-white/5">
                           <TableRow className="border-white/8 hover:bg-transparent">
                             <TableHead className="w-[120px] text-white/55">브랜드</TableHead>
                             <TableHead className="min-w-[220px] text-white/55">모델명</TableHead>
@@ -465,7 +504,8 @@ export default function CameraTeamHub() {
                             </TableRow>
                           )}
                         </TableBody>
-                      </Table>
+                        </Table>
+                      </div>
                     </div>
                   </div>
                 </CardContent>
