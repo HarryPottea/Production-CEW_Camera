@@ -19,6 +19,9 @@ import {
   CheckCircle2,
   Clock3,
   Megaphone,
+  Aperture,
+  Video,
+  Mic,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../components/ui/card";
 import { Input } from "../components/ui/input";
@@ -84,6 +87,14 @@ function EquipmentStatusBadge({ status }: { status: string }) {
 
 function getPrimaryLink(item: EquipmentItem) {
   return item.news_url || item.product_url || item.official_url || null;
+}
+
+function getCategoryIcon(category: string) {
+  const normalized = category.toLowerCase();
+  if (normalized.includes("camera") || normalized.includes("cinema")) return Video;
+  if (normalized.includes("lens")) return Aperture;
+  if (normalized.includes("audio") || normalized.includes("mic")) return Mic;
+  return Camera;
 }
 
 function normalizeData(items: EquipmentItem[]) {
@@ -405,9 +416,8 @@ export default function CameraTeamHub() {
                           <TableRow className="border-white/8 hover:bg-transparent">
                             <TableHead className="w-[120px] text-white/55">브랜드</TableHead>
                             <TableHead className="min-w-[220px] text-white/55">모델명</TableHead>
-                            <TableHead className="w-[150px] text-white/55">카테고리</TableHead>
+                            <TableHead className="w-[190px] text-white/55">카테고리</TableHead>
                             <TableHead className="w-[180px] text-white/55">발표일 / 상태</TableHead>
-                            <TableHead className="min-w-[320px] text-white/55">원본 제목</TableHead>
                             <TableHead className="w-[90px] text-right text-white/55">링크</TableHead>
                           </TableRow>
                         </TableHeader>
@@ -417,14 +427,18 @@ export default function CameraTeamHub() {
                               <TableRow key={item.id} className="border-white/6 hover:bg-white/[0.03]">
                                 <TableCell className="font-medium text-white">{item.brand}</TableCell>
                                 <TableCell className="text-white">{item.model}</TableCell>
-                                <TableCell className="text-white/65">{item.category}</TableCell>
+                                <TableCell>
+                                  <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/75">
+                                    {React.createElement(getCategoryIcon(item.category), { className: "h-3.5 w-3.5" })}
+                                    <span>{item.category}</span>
+                                  </div>
+                                </TableCell>
                                 <TableCell>
                                   <div className="flex min-w-[150px] flex-col gap-2">
                                     <span className="text-xs font-medium text-white/75">{item.announced_at}</span>
                                     <EquipmentStatusBadge status={item.status} />
                                   </div>
                                 </TableCell>
-                                <TableCell className="text-xs leading-5 text-white/55">{item.source_title || item.summary}</TableCell>
                                 <TableCell className="text-right">
                                   {getPrimaryLink(item) ? (
                                     <Button variant="ghost" size="sm" className="h-9 w-9 rounded-full p-0 text-white hover:bg-orange-500 hover:text-white" asChild>
@@ -440,7 +454,7 @@ export default function CameraTeamHub() {
                             ))
                           ) : (
                             <TableRow className="border-white/6 hover:bg-transparent">
-                              <TableCell colSpan={6} className="h-24 text-center text-sm text-white/45">
+                              <TableCell colSpan={5} className="h-24 text-center text-sm text-white/45">
                                 검색 조건에 맞는 장비가 없습니다.
                               </TableCell>
                             </TableRow>
