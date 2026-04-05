@@ -9,6 +9,8 @@ export interface EquipmentItem {
   release_date?: string | null;
   status: EquipmentStatus;
   summary: string;
+  news_url?: string | null;
+  product_url?: string | null;
   official_url?: string | null;
   manual_url?: string | null;
   firmware_url?: string | null;

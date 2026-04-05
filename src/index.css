@@ -120,11 +120,18 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    }
-  body {
-    @apply bg-background text-foreground;
-    }
+  }
+
   html {
     @apply font-sans;
-    }
+  }
+
+  body {
+    @apply text-foreground;
+    background:
+      radial-gradient(circle at top left, rgba(255, 120, 40, 0.24), transparent 28%),
+      radial-gradient(circle at top right, rgba(255, 70, 20, 0.16), transparent 24%),
+      linear-gradient(180deg, #2a140f 0%, #120d0c 35%, #080808 100%);
+    min-height: 100vh;
+  }
 }

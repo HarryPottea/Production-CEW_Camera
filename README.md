@@ -128,7 +128,9 @@ npm run lint
 - `release_date`
 - `status`
 - `summary`
-- `official_url`
+- `news_url` (공식 뉴스/보도자료 링크)
+- `product_url` (제품 상세 페이지 링크)
+- `official_url` (레거시 호환용 링크)
 - `manual_url`
 - `firmware_url`
 - `is_published`

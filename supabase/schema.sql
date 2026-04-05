@@ -7,6 +7,8 @@ create table if not exists public.equipment (
   release_date date,
   status text not null,
   summary text not null,
+  news_url text,
+  product_url text,
   official_url text,
   manual_url text,
   firmware_url text,
@@ -15,6 +17,9 @@ create table if not exists public.equipment (
   source_title text,
   created_at timestamptz not null default now()
 );
+
+alter table public.equipment add column if not exists news_url text;
+alter table public.equipment add column if not exists product_url text;
 
 create index if not exists equipment_announced_at_idx on public.equipment (announced_at desc);
 create index if not exists equipment_brand_idx on public.equipment (brand);
