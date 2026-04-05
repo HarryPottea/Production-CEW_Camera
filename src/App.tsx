@@ -31,7 +31,7 @@ import { Badge } from "../components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table";
-import { supabase } from "./lib/supabase";
+import { hasSupabaseEnv, supabase } from "./lib/supabase";
 
 const supabaseSchema = [
   { column: "id", type: "uuid", note: "기본 키" },
@@ -82,7 +82,7 @@ const initialEquipmentData = [
     announced_at: "2026-02-18",
     release_date: "2026-04-15",
     status: "출시 예정",
-    summary: "다큐와 인터뷰 촬영에 적합한 미드레인지 시네마 바디로 가정한 예시 데이터입니다.",
+    summary: "다큐, 인터뷰, 소규모 상업 촬영 워크플로를 가정한 시네마 카메라 예시 데이터입니다.",
     official_url: "#",
     manual_url: "#",
     firmware_url: "#",
@@ -96,7 +96,7 @@ const initialEquipmentData = [
     announced_at: "2026-03-02",
     release_date: "2026-03-29",
     status: "출시 완료",
-    summary: "저조도와 얕은 심도 표현을 중시하는 촬영팀이 관심 가질 만한 줌 렌즈 예시입니다.",
+    summary: "저조도 대응과 얕은 심도 표현을 중시하는 촬영 환경을 위한 대구경 줌 렌즈 예시 데이터입니다.",
     official_url: "#",
     manual_url: "#",
     firmware_url: "#",
@@ -110,7 +110,7 @@ const initialEquipmentData = [
     announced_at: "2026-03-20",
     release_date: "2026-04-28",
     status: "출시 예정",
-    summary: "시네마 카메라 밸런싱과 차량 촬영 대응을 고려한 상위 짐벌 예시입니다.",
+    summary: "시네마 카메라 밸런싱과 차량 촬영 운용을 고려한 상위 짐벌 예시 데이터입니다.",
     official_url: "#",
     manual_url: "#",
     firmware_url: "#",
@@ -124,7 +124,7 @@ const initialEquipmentData = [
     announced_at: "2026-01-10",
     release_date: "2026-02-05",
     status: "출시 완료",
-    summary: "박스형 바디 운용이 필요한 세팅에서 검토하기 좋은 모델 예시입니다.",
+    summary: "박스형 바디 기반 리그 구성이 필요한 촬영 세팅을 위한 예시 데이터입니다.",
     official_url: "#",
     manual_url: "#",
     firmware_url: "#",
@@ -138,7 +138,7 @@ const initialEquipmentData = [
     announced_at: "2026-03-14",
     release_date: "2026-05-03",
     status: "발표",
-    summary: "무선 송수신 안정성과 모니터링 환경 개선을 위한 장비 카테고리 예시입니다.",
+    summary: "무선 송수신 안정성과 현장 모니터링 환경 개선을 위한 장비 예시 데이터입니다.",
     official_url: "#",
     manual_url: "#",
     firmware_url: "#",
@@ -187,18 +187,28 @@ export default function CameraTeamHub() {
   const fetchData = async () => {
     try {
       setLoading(true);
+      setError(null);
+
+      if (!hasSupabaseEnv || !supabase) {
+        setError("Supabase 환경 변수가 설정되지 않아 데모 데이터를 표시합니다.");
+        return;
+      }
+
       const { data, error } = await supabase
         .from('equipment')
         .select('*')
+        .eq('is_published', true)
         .order('announced_at', { ascending: false });
 
       if (error) throw error;
       if (data && data.length > 0) {
         setEquipmentData(data);
+      } else {
+        setError("게시된 장비 데이터가 없어 데모 데이터를 표시합니다.");
       }
     } catch (err: any) {
       console.error("Supabase fetch error:", err);
-      setError(err.message);
+      setError(err?.message || "데이터를 불러오지 못해 데모 데이터를 표시합니다.");
     } finally {
       setLoading(false);
     }
@@ -388,23 +398,35 @@ export default function CameraTeamHub() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {filtered.map((item) => (
-                        <TableRow key={item.id}>
-                          <TableCell className="font-medium">{item.brand}</TableCell>
-                          <TableCell>{item.model}</TableCell>
-                          <TableCell>{item.category}</TableCell>
-                          <TableCell className="text-zinc-500 text-xs">{item.announced_at}</TableCell>
-                          <TableCell className="text-zinc-500 text-xs">{item.release_date}</TableCell>
-                          <TableCell><EquipmentStatusBadge status={item.status} /></TableCell>
-                          <TableCell className="text-right">
-                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" asChild>
-                              <a href={item.official_url} target="_blank" rel="noreferrer">
-                                <ChevronRight className="h-4 w-4" />
-                              </a>
-                            </Button>
+                      {filtered.length > 0 ? (
+                        filtered.map((item) => (
+                          <TableRow key={item.id}>
+                            <TableCell className="font-medium">{item.brand}</TableCell>
+                            <TableCell>{item.model}</TableCell>
+                            <TableCell>{item.category}</TableCell>
+                            <TableCell className="text-zinc-500 text-xs">{item.announced_at}</TableCell>
+                            <TableCell className="text-zinc-500 text-xs">{item.release_date}</TableCell>
+                            <TableCell><EquipmentStatusBadge status={item.status} /></TableCell>
+                            <TableCell className="text-right">
+                              {item.official_url && item.official_url !== "#" ? (
+                                <Button variant="ghost" size="sm" className="h-8 w-8 p-0" asChild>
+                                  <a href={item.official_url} target="_blank" rel="noreferrer" aria-label={`${item.model} 공식 링크 열기`}>
+                                    <ChevronRight className="h-4 w-4" />
+                                  </a>
+                                </Button>
+                              ) : (
+                                <span className="text-xs text-zinc-400">-</span>
+                              )}
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      ) : (
+                        <TableRow>
+                          <TableCell colSpan={7} className="h-24 text-center text-sm text-zinc-500">
+                            검색 조건에 맞는 장비가 없습니다.
                           </TableCell>
                         </TableRow>
-                      ))}
+                      )}
                     </TableBody>
                   </Table>
                 </div>
