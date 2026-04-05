@@ -78,7 +78,23 @@ npm run sync:news
 
 을 수행합니다.
 
-### 5) 개발 서버 실행
+### 5) GitHub Actions 자동 실행 설정
+
+이 프로젝트에는 `.github/workflows/sync-news.yml` 이 포함되어 있습니다.
+
+기본 설정:
+- 수동 실행 가능 (`workflow_dispatch`)
+- **6시간마다 자동 실행**
+
+GitHub 저장소의 **Settings → Secrets and variables → Actions** 에 아래 시크릿을 등록하세요.
+
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+
+> 시크릿이 없으면 스냅샷 파일 갱신은 가능하지만 Supabase 업서는 동작하지 않습니다.
+
+### 6) 개발 서버 실행
 
 ```bash
 npm run dev
