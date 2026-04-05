@@ -91,9 +91,11 @@ function getPrimaryLink(item: EquipmentItem) {
 
 function getCategoryIcon(category: string) {
   const normalized = category.toLowerCase();
-  if (normalized.includes("camera") || normalized.includes("cinema")) return Video;
-  if (normalized.includes("lens")) return Aperture;
-  if (normalized.includes("audio") || normalized.includes("mic")) return Mic;
+  if (normalized.includes("시네마") || normalized.includes("cinema") || normalized.includes("camera")) return Video;
+  if (normalized.includes("렌즈") || normalized.includes("lens")) return Aperture;
+  if (normalized.includes("오디오") || normalized.includes("audio") || normalized.includes("mic")) return Mic;
+  if (normalized.includes("짐벌") || normalized.includes("gimbal")) return Radio;
+  if (normalized.includes("삼각대") || normalized.includes("tripod")) return Workflow;
   return Camera;
 }
 

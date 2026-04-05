@@ -18,6 +18,20 @@ type FeedCandidate = {
   category: string;
 };
 
+function inferCategory(text: string) {
+  const haystack = text.toLowerCase();
+
+  if (/(tripod|head system|fluid head|video tripod|hi-hat)/.test(haystack)) return "삼각대";
+  if (/(gimbal|stabilizer|ronin|rs\s?\d)/.test(haystack)) return "짐벌";
+  if (/(wireless|transmission|transmitter|receiver|video assist|monitor)/.test(haystack)) return "모니터/무선영상";
+  if (/(microphone|audio|recorder|lavalier|shotgun mic)/.test(haystack)) return "오디오";
+  if (/(lens|nikkor|rf |ef |e-mount|z mount|zoom|prime)/.test(haystack)) return "렌즈";
+  if (/(cinema|burano|venice|ursa|pyxis|komodo|v-raptor|cine)/.test(haystack)) return "시네마 카메라";
+  if (/(camera|alpha|fx\d|eos|mirrorless|full-frame|aps-c|sensor)/.test(haystack)) return "카메라";
+
+  return "기타 촬영장비";
+}
+
 const includeTerms = [
   "announce",
   "announces",
@@ -176,7 +190,7 @@ function parseRssItems(xml: string, source: SourceConfig): FeedCandidate[] {
       publishedAt: new Date(publishedAt || Date.now()).toISOString(),
       summary,
       brand: source.brand,
-      category: source.category,
+      category: inferCategory(`${title} ${summary}`),
     });
   }
 
@@ -202,7 +216,7 @@ function parseCanonHtml(html: string, source: SourceConfig): FeedCandidate[] {
       publishedAt,
       summary: title,
       brand: source.brand,
-      category: source.category,
+      category: inferCategory(title),
     });
   }
 
@@ -232,7 +246,7 @@ function parseSonyHtml(html: string, source: SourceConfig): FeedCandidate[] {
       publishedAt,
       summary: anchorText,
       brand: source.brand,
-      category: source.category,
+      category: inferCategory(anchorText),
     });
   }
 
