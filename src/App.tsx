@@ -213,8 +213,8 @@ export default function CameraTeamHub() {
                       <span className="text-xs text-white/45">발표일 {heroItem?.announced_at || "-"}</span>
                     </div>
                     {heroItem && getPrimaryLink(heroItem) ? (
-                      <Button className="mt-8 rounded-full bg-orange-500 text-white hover:bg-orange-400" asChild>
-                        <a href={getPrimaryLink(heroItem)!} target="_blank" rel="noreferrer">
+                      <Button className="mt-8 h-12 min-w-[220px] rounded-full bg-orange-500 px-6 text-white hover:bg-orange-400 sm:min-w-[240px]" asChild>
+                        <a href={getPrimaryLink(heroItem)!} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center whitespace-nowrap">
                           공식 발표 글 보기
                           <ArrowUpRight className="ml-2 h-4 w-4" />
                         </a>
