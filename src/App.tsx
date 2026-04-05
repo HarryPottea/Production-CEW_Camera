@@ -298,7 +298,10 @@ export default function CameraTeamHub() {
                             <EquipmentStatusBadge status={item.status} />
                           </div>
                           <h3 className="mt-5 text-xl font-semibold text-white sm:text-2xl">{item.model}</h3>
-                          <p className="mt-2 text-xs uppercase tracking-[0.18em] text-white/35">{item.category}</p>
+                          <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/70">
+                            {React.createElement(getCategoryIcon(item.category), { className: "h-3.5 w-3.5" })}
+                            <span>{item.category}</span>
+                          </div>
                           <p className="mt-4 min-h-[72px] text-sm leading-6 text-white/62">{item.summary}</p>
                           <div className="mt-6 flex items-center justify-between border-t border-white/8 pt-4">
                             <span className="text-xs text-white/42">{item.announced_at}</span>
@@ -418,7 +421,7 @@ export default function CameraTeamHub() {
                             <TableHead className="min-w-[220px] text-white/55">모델명</TableHead>
                             <TableHead className="w-[190px] text-white/55">카테고리</TableHead>
                             <TableHead className="w-[180px] text-white/55">발표일 / 상태</TableHead>
-                            <TableHead className="w-[90px] text-right text-white/55">링크</TableHead>
+                            <TableHead className="w-[110px] pr-6 text-center text-white/55">링크</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -439,7 +442,7 @@ export default function CameraTeamHub() {
                                     <EquipmentStatusBadge status={item.status} />
                                   </div>
                                 </TableCell>
-                                <TableCell className="text-right">
+                                <TableCell className="pr-6 text-center">
                                   {getPrimaryLink(item) ? (
                                     <Button variant="ghost" size="sm" className="h-9 w-9 rounded-full p-0 text-white hover:bg-orange-500 hover:text-white" asChild>
                                       <a href={getPrimaryLink(item)!} target="_blank" rel="noreferrer" aria-label={`${item.model} 관련 뉴스 열기`}>
