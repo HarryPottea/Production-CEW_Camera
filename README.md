@@ -1,6 +1,6 @@
 # Production CEW Camera
 
-카메라팀이 최신 촬영 장비 소식과 출시 일정을 한눈에 확인할 수 있도록 만든 프론트엔드 대시보드입니다.
+카메라팀이 **브랜드 공식 뉴스 소스에서 장비 출시/발표 소식을 자동 수집**하고, 이를 한눈에 확인할 수 있도록 만든 대시보드입니다.
 
 ## 현재 포함된 기능
 
@@ -8,6 +8,7 @@
 - 주요 업데이트 목록
 - 장비 검색 / 브랜드 / 카테고리 / 상태 필터
 - Supabase 연동 기반 장비 데이터 조회
+- 공식 뉴스 소스 수집 스크립트
 - Supabase 연결이 없을 때 데모 데이터 fallback
 
 ## 기술 스택
@@ -17,6 +18,23 @@
 - Vite
 - shadcn/ui 스타일 컴포넌트
 - Supabase
+- tsx 기반 수집 스크립트
+
+## 자동 수집 구조
+
+현재 수집기는 아래 소스를 대상으로 동작하도록 구성했습니다.
+
+- Sony MediaRoom / JSON
+- Canon Global News / JSON
+- Nikon 공식 RSS
+- Blackmagic Design RSS
+
+향후 추가 예정:
+
+- RED
+- Sigma
+- Tamron
+- DJI
 
 ## 실행 방법
 
@@ -33,11 +51,34 @@ npm install
 ```env
 VITE_SUPABASE_URL=your-project-url
 VITE_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 ```
+
+- `VITE_SUPABASE_*` : 프론트에서 읽기용
+- `SUPABASE_SERVICE_ROLE_KEY` : 수집 스크립트가 DB upsert할 때 사용
 
 > Supabase 환경 변수가 없으면 앱은 자동으로 데모 데이터를 표시합니다.
 
-### 3) 개발 서버 실행
+### 3) Supabase 테이블 생성
+
+`suoabase/schema.sql` 내용을 Supabase SQL Editor에서 실행하세요.
+
+### 4) 뉴스 자동 수집 실행
+
+```bash
+npm run sync:news
+```
+
+이 작업은:
+- 공식 뉴스 피드 수집
+- 키워드 필터링
+- 항목 정규화
+- `src/data/equipment.generated.json` 스냅샷 저장
+- Supabase `equipment` 테이블 upsert
+
+을 수행합니다.
+
+### 5) 개발 서버 실행
 
 ```bash
 npm run dev
@@ -57,11 +98,11 @@ npm run build
 npm run lint
 ```
 
-## 데이터 테이블 예시
+## 데이터 테이블 구조
 
 앱은 `equipment` 테이블을 기준으로 데이터를 읽습니다.
 
-주요 컬럼 예시:
+주요 컬럼:
 
 - `id`
 - `brand`
@@ -76,14 +117,20 @@ npm run lint
 - `firmware_url`
 - `is_published`
 - `featured`
+- `source_title`
 - `created_at`
 
-## 개선 권장 사항
+## 현재 한계
 
-다음 단계로는 아래 작업을 추천합니다.
+- 브랜드별 뉴스 소스 구조가 달라 파서 보강이 더 필요할 수 있음
+- 일부 브랜드는 RSS/공식 JSON이 없어 HTML 파서 추가가 필요함
+- 현재 상태 분류(`발표`, `출시 예정`, `출시 완료`)는 기사 날짜 기반 추정 로직입니다
+- 모델명 추출은 기사 제목 기반이라 후속 정제가 필요할 수 있습니다
 
-1. 실제 공식 장비 링크/출시 데이터 정제
-2. Supabase 스키마 및 RLS 정책 정리
-3. 관리자 입력 페이지 추가
-4. 공식 뉴스/RSS/크롤러 수집 파이프라인 연결
-5. 번들 크기 최적화
+## 다음 추천 작업
+
+1. 브랜드별 파서 정교화
+2. RED / Sigma / Tamron / DJI 추가
+3. 중복 제거 로직 강화
+4. 관리자 큐레이션 페이지 추가
+5. cron / GitHub Actions로 정기 수집 자동화
