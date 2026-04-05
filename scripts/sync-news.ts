@@ -18,6 +18,69 @@ type FeedCandidate = {
   category: string;
 };
 
+const includeTerms = [
+  "announce",
+  "announces",
+  "announced",
+  "introduce",
+  "introduces",
+  "introduced",
+  "launch",
+  "launches",
+  "launched",
+  "release",
+  "releases",
+  "released",
+  "unveil",
+  "unveils",
+  "unveiled",
+  "new",
+  "camera",
+  "cinema",
+  "lens",
+  "sensor",
+  "nikkor",
+  "eos",
+  "alpha",
+  "fx",
+  "burano",
+  "venice",
+  "ursa",
+  "pyxis",
+  "komodo",
+  "v-raptor",
+];
+
+const globalExcludeTerms = [
+  "software update",
+  "firmware update",
+  "update!",
+  "support",
+  "manual",
+  "story",
+  "column",
+  "interview",
+  "essay",
+  "tips",
+  "how to",
+  "review",
+  "award",
+  "accessibility",
+  "sustainability",
+  "patent",
+  "financial",
+  "annual report",
+  "scholarship",
+  "museum",
+];
+
+const brandSpecificExclude: Record<string, string[]> = {
+  Blackmagic: ["davinci resolve", "video assist", "streaming", "atem", "android", "ios", "blackmagic camera 3", "camera 10."],
+  Nikon: ["thousand and one nights", "a new article", "story", "z series special content"],
+  Sony: ["semiconductor solutions", "security cameras", "projector", "accessibility for all"],
+  Canon: ["toner", "printer", "lithography", "patent", "wafer", "office", "medical"],
+};
+
 function toStatus(publishedAt: string): EquipmentStatus {
   const published = new Date(publishedAt).getTime();
   const daysAgo = (Date.now() - published) / (1000 * 60 * 60 * 24);
@@ -49,9 +112,18 @@ function inferModel(title: string) {
     .slice(0, 120);
 }
 
-function matchesKeywords(text: string, keywords: string[]) {
+function includesUsefulTerms(text: string) {
   const haystack = text.toLowerCase();
-  return keywords.some((keyword) => haystack.includes(keyword.toLowerCase()));
+  return includeTerms.some((term) => haystack.includes(term));
+}
+
+function includesExcludedTerms(text: string, brand: string) {
+  const haystack = text.toLowerCase();
+  return [...globalExcludeTerms, ...(brandSpecificExclude[brand] || [])].some((term) => haystack.includes(term));
+}
+
+function isEquipmentReleaseCandidate(text: string, brand: string) {
+  return includesUsefulTerms(text) && !includesExcludedTerms(text, brand);
 }
 
 async function fetchText(url: string) {
@@ -85,7 +157,7 @@ function parseRssItems(xml: string, source: SourceConfig): FeedCandidate[] {
     );
 
     if (!title || !url) continue;
-    if (!matchesKeywords(`${title} ${summary}`, source.keywords)) continue;
+    if (!isEquipmentReleaseCandidate(`${title} ${summary}`, source.brand)) continue;
 
     candidates.push({
       title,
@@ -111,7 +183,7 @@ function parseCanonHtml(html: string, source: SourceConfig): FeedCandidate[] {
     const publishedAt = new Date(dateMatch?.[1] || Date.now()).toISOString();
 
     if (!href || !title) continue;
-    if (!matchesKeywords(title, source.keywords)) continue;
+    if (!isEquipmentReleaseCandidate(title, source.brand)) continue;
 
     candidates.push({
       title,
@@ -136,7 +208,7 @@ function parseSonyHtml(html: string, source: SourceConfig): FeedCandidate[] {
 
     if (!href || !anchorText) continue;
     if (!href.includes("sony.mediaroom.com") && !href.startsWith("/")) continue;
-    if (!matchesKeywords(anchorText, source.keywords)) continue;
+    if (!isEquipmentReleaseCandidate(anchorText, source.brand)) continue;
 
     const dateMatch = html.slice(Math.max(0, match.index! - 40), match.index! + 20).match(/(\d{2}\/\d{2}\/\d{4})/);
     const publishedAt = dateMatch
@@ -190,7 +262,7 @@ function toEquipmentItem(candidate: FeedCandidate): EquipmentItem {
     official_url: candidate.url,
     manual_url: null,
     firmware_url: null,
-    featured: /burano|venice|alpha|fx|eos|cinema|nikkor|pyxis|ursa/i.test(candidate.title),
+    featured: /burano|venice|alpha|fx|eos|cinema|nikkor|pyxis|ursa|komodo|v-raptor/i.test(candidate.title),
     is_published: true,
     source_title: candidate.title,
   };
