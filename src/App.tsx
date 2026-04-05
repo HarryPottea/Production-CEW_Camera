@@ -3,19 +3,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState } from "react";
 import {
   Camera,
   Search,
   CalendarDays,
   ArrowUpRight,
   Bell,
-  Database,
   Star,
   Workflow,
-  Server,
   Loader2,
-  AlertCircle,
   ChevronRight,
   Sparkles,
   Rss,
@@ -29,27 +26,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table";
 import { demoEquipmentData } from "./data/demoEquipment";
-import { hasSupabaseEnv, supabase } from "./lib/supabase";
+import generatedEquipmentData from "./data/equipment.generated.json";
 import type { EquipmentItem } from "./types";
-
-const supabaseSchema = [
-  { column: "id", type: "text", note: "고유 식별자" },
-  { column: "brand", type: "text", note: "브랜드명" },
-  { column: "model", type: "text", note: "제품명 또는 기사 기반 모델명" },
-  { column: "category", type: "text", note: "카메라 / 렌즈 / 짐벌 등" },
-  { column: "announced_at", type: "date", note: "공식 발표일" },
-  { column: "release_date", type: "date", note: "출시일 또는 예정일" },
-  { column: "status", type: "text", note: "발표 / 출시 예정 / 출시 완료" },
-  { column: "summary", type: "text", note: "짧은 설명 또는 기사 요약" },
-  { column: "news_url", type: "text", note: "공식 뉴스/보도자료 링크" },
-  { column: "product_url", type: "text", note: "제품 상세 페이지 링크" },
-  { column: "official_url", type: "text", note: "레거시 호환용 링크" },
-  { column: "manual_url", type: "text", note: "매뉴얼 링크" },
-  { column: "firmware_url", type: "text", note: "펌웨어 링크" },
-  { column: "is_published", type: "boolean", note: "노출 여부" },
-  { column: "featured", type: "boolean", note: "주요 장비 여부" },
-  { column: "source_title", type: "text", note: "원본 뉴스 제목" },
-];
 
 const crawlerTargets = [
   "Sony MediaRoom / HTML 아카이브",
@@ -99,47 +77,28 @@ function getPrimaryLink(item: EquipmentItem) {
   return item.news_url || item.product_url || item.official_url || null;
 }
 
+function normalizeData(items: EquipmentItem[]) {
+  return items.map((item) => ({
+    ...item,
+    news_url: item.news_url ?? item.official_url ?? null,
+  }));
+}
+
+function isUsefulFeatured(item: EquipmentItem) {
+  const text = `${item.model} ${item.source_title || ""} ${item.summary}`.toLowerCase();
+  return !text.includes("thousand and one nights") && !text.includes("support") && !text.includes("update!");
+}
+
 export default function CameraTeamHub() {
-  const [equipmentData, setEquipmentData] = useState<EquipmentItem[]>(demoEquipmentData);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [brand, setBrand] = useState("전체");
   const [category, setCategory] = useState("전체");
   const [status, setStatus] = useState("전체");
+  const [loading] = useState(false);
 
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      if (!hasSupabaseEnv || !supabase) {
-        setError("Supabase 환경 변수가 없어 데모 데이터를 보여주고 있습니다. 수집 결과를 쓰려면 sync:news와 DB 연결이 필요합니다.");
-        return;
-      }
-
-      const { data, error } = await supabase
-        .from("equipment")
-        .select("*")
-        .eq("is_published", true)
-        .order("announced_at", { ascending: false });
-
-      if (error) throw error;
-      if (data && data.length > 0) {
-        setEquipmentData(data as EquipmentItem[]);
-      } else {
-        setError("게시된 장비 데이터가 없어 데모 데이터를 표시합니다.");
-      }
-    } catch (err: any) {
-      console.error("Supabase fetch error:", err);
-      setError(err?.message || "데이터를 불러오지 못해 데모 데이터를 표시합니다.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
+  const equipmentData = useMemo(() => {
+    const generated = normalizeData((generatedEquipmentData as EquipmentItem[]) || []);
+    return generated.length > 0 ? generated : demoEquipmentData;
   }, []);
 
   const brands = useMemo(() => ["전체", ...Array.from(new Set(equipmentData.map((item) => item.brand)))], [equipmentData]);
@@ -159,11 +118,11 @@ export default function CameraTeamHub() {
     });
   }, [search, brand, category, status, equipmentData]);
 
-  const featured = equipmentData.filter((item) => item.featured).slice(0, 4);
+  const featured = equipmentData.filter((item) => item.featured && isUsefulFeatured(item)).slice(0, 4);
   const upcoming = equipmentData.filter((item) => item.status === "출시 예정");
   const announcedOnly = equipmentData.filter((item) => item.status === "발표");
   const latest = equipmentData.slice(0, 6);
-  const heroItem = equipmentData[0];
+  const heroItem = featured[0] || equipmentData[0];
 
   return (
     <div className="min-h-screen bg-[#120d0c] text-white">
@@ -179,20 +138,16 @@ export default function CameraTeamHub() {
               <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div>
                   <p className="text-sm font-semibold tracking-[0.22em] text-white/70 uppercase">Production CEW Camera</p>
-                  <p className="mt-2 text-sm text-white/70">브랜드 공식 뉴스 기반으로 장비 발표와 출시 흐름을 추적하는 카메라팀 허브</p>
+                  <p className="mt-2 text-sm text-white/70">공식 발표 뉴스와 제품 출시 흐름을 빠르게 확인하는 카메라팀 모니터링 보드</p>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3">
                   <Badge className="rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-white hover:bg-white/10">
                     <Rss className="mr-1.5 h-3.5 w-3.5" /> 공식 뉴스 소스
                   </Badge>
-                  <Button
-                    onClick={() => fetchData()}
-                    className="rounded-full bg-white text-black hover:bg-white/90"
-                    disabled={loading}
-                  >
-                    {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Database className="mr-2 h-4 w-4" />}
-                    데이터 동기화
+                  <Button className="rounded-full bg-white text-black hover:bg-white/90" disabled>
+                    {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Radio className="mr-2 h-4 w-4" />}
+                    자동 수집 반영 중
                   </Button>
                 </div>
               </div>
@@ -209,8 +164,7 @@ export default function CameraTeamHub() {
                   </div>
 
                   <p className="max-w-xl text-sm leading-6 text-white/72 md:text-base">
-                    장비 출시 뉴스, 발표 흐름, 공식 보도자료 링크를 하나의 화면에서 정리합니다.
-                    촬영팀이 바로 확인하고 판단할 수 있게 빠르고 시네마틱하게 설계했습니다.
+                    브랜드별 공식 발표 글을 중심으로 새 장비, 출시 예정 제품, 확인이 필요한 뉴스를 한 화면에서 정리합니다.
                   </p>
 
                   <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
@@ -234,7 +188,7 @@ export default function CameraTeamHub() {
                 </div>
 
                 <div className="rounded-[1.75rem] border border-white/10 bg-black/25 p-6 backdrop-blur-md">
-                  <p className="text-sm font-medium text-white/60">Focus item</p>
+                  <p className="text-sm font-medium text-white/60">오늘의 주목 장비</p>
                   <div className="mt-8">
                     <Badge className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-white hover:bg-white/10">
                       {heroItem?.brand || "Camera Team"}
@@ -252,7 +206,7 @@ export default function CameraTeamHub() {
                     {heroItem && getPrimaryLink(heroItem) ? (
                       <Button className="mt-8 rounded-full bg-orange-500 text-white hover:bg-orange-400" asChild>
                         <a href={getPrimaryLink(heroItem)!} target="_blank" rel="noreferrer">
-                          공식 뉴스 보기
+                          공식 발표 글 보기
                           <ArrowUpRight className="ml-2 h-4 w-4" />
                         </a>
                       </Button>
@@ -268,8 +222,8 @@ export default function CameraTeamHub() {
                 <p className="mt-2 text-sm text-white/75">공식 RSS, HTML 아카이브, 브랜드 뉴스룸</p>
               </div>
               <div>
-                <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">Editorial flow</p>
-                <p className="mt-2 text-sm text-white/75">촬영팀이 보는 발표·출시·참고 링크 중심 구조</p>
+                <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">Focus</p>
+                <p className="mt-2 text-sm text-white/75">장비 발표 글, 제품 관련 기사, 공식 링크</p>
               </div>
               <div>
                 <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">Sync mode</p>
@@ -277,7 +231,7 @@ export default function CameraTeamHub() {
               </div>
               <div>
                 <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">Output</p>
-                <p className="mt-2 text-sm text-white/75">뉴스 링크 우선, 제품 페이지 보조 구조</p>
+                <p className="mt-2 text-sm text-white/75">공식 발표 글 우선 연결, JSON 기반 운영</p>
               </div>
             </div>
           </div>
@@ -291,9 +245,9 @@ export default function CameraTeamHub() {
 
           <Tabs defaultValue="dashboard" className="mt-10 space-y-8">
             <TabsList className="h-auto rounded-full border border-white/10 bg-white/5 p-1 text-white backdrop-blur-xl">
-              <TabsTrigger value="dashboard" className="rounded-full data-[state=active]:bg-orange-500 data-[state=active]:text-white">큐레이션</TabsTrigger>
+              <TabsTrigger value="dashboard" className="rounded-full data-[state=active]:bg-orange-500 data-[state=active]:text-white">주요 장비</TabsTrigger>
               <TabsTrigger value="equipment" className="rounded-full data-[state=active]:bg-orange-500 data-[state=active]:text-white">장비 데이터</TabsTrigger>
-              <TabsTrigger value="admin" className="rounded-full data-[state=active]:bg-orange-500 data-[state=active]:text-white">시스템</TabsTrigger>
+              <TabsTrigger value="admin" className="rounded-full data-[state=active]:bg-orange-500 data-[state=active]:text-white">수집 소스</TabsTrigger>
             </TabsList>
 
             <TabsContent value="dashboard" className="space-y-8 outline-none">
@@ -302,15 +256,13 @@ export default function CameraTeamHub() {
                   <CardHeader className="border-b border-white/8 pb-6">
                     <div className="flex items-center gap-2 text-orange-200">
                       <Sparkles className="h-4 w-4" />
-                      <span className="text-sm font-medium">Curated highlights</span>
+                      <span className="text-sm font-medium">Key releases</span>
                     </div>
                     <CardTitle className="mt-3 text-4xl font-semibold leading-tight text-white">
-                      지금 기능에 맞는
-                      <br />
-                      시네마틱 뉴스 대시보드
+                      최근 주목할 장비 발표
                     </CardTitle>
                     <CardDescription className="max-w-xl text-white/55">
-                      레퍼런스의 분위기는 가져오되, 촬영팀이 장비 발표 정보를 읽고 바로 링크를 확인할 수 있도록 UI 구조를 재설계했습니다.
+                      팀에서 바로 확인해야 할 공식 발표 장비와 관련 글을 먼저 보여줍니다.
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="p-6">
@@ -490,27 +442,6 @@ export default function CameraTeamHub() {
                 <Card className="border-white/10 bg-white/5 backdrop-blur-xl">
                   <CardHeader>
                     <CardTitle className="text-base flex items-center gap-2 text-white">
-                      <Server className="h-4 w-4 text-orange-300" /> 데이터베이스 스키마
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    {supabaseSchema.map((item) => (
-                      <div key={item.column} className="flex items-center justify-between border-b border-white/6 py-2 last:border-0">
-                        <div>
-                          <p className="text-sm font-medium text-white">{item.column}</p>
-                          <p className="text-xs text-white/45">{item.note}</p>
-                        </div>
-                        <Badge variant="outline" className="border-white/10 bg-white/5 text-[10px] text-white">
-                          {item.type}
-                        </Badge>
-                      </div>
-                    ))}
-                  </CardContent>
-                </Card>
-
-                <Card className="border-white/10 bg-white/5 backdrop-blur-xl">
-                  <CardHeader>
-                    <CardTitle className="text-base flex items-center gap-2 text-white">
                       <Workflow className="h-4 w-4 text-orange-300" /> 자동 수집 운영 정보
                     </CardTitle>
                   </CardHeader>
@@ -520,16 +451,27 @@ export default function CameraTeamHub() {
                       <p className="mt-3 font-mono text-sm text-orange-200">npm run sync:news</p>
                     </div>
                     <div className="rounded-[1.5rem] border border-white/8 bg-black/20 p-5">
-                      <p className="text-xs uppercase tracking-[0.18em] text-white/35">Visual direction</p>
+                      <p className="text-xs uppercase tracking-[0.18em] text-white/35">Data source</p>
                       <p className="mt-3 text-sm leading-6 text-white/62">
-                        다크 시네마틱 무드, 오렌지 글로우, 큰 타이포, 강한 대비를 사용하되 정보 구조는 카메라 출시 뉴스 대시보드에 맞게 재구성했습니다.
+                        자동 수집 결과를 `equipment.generated.json`에 저장하고, 프론트는 이 파일을 직접 읽습니다.
                       </p>
                     </div>
-                    {error ? (
-                      <div className="inline-flex items-center gap-2 rounded-full border border-orange-400/20 bg-orange-500/10 px-4 py-2 text-xs text-orange-200">
-                        <AlertCircle className="h-4 w-4" /> {error}
+                  </CardContent>
+                </Card>
+
+                <Card className="border-white/10 bg-white/5 backdrop-blur-xl">
+                  <CardHeader>
+                    <CardTitle className="text-base flex items-center gap-2 text-white">
+                      <Rss className="h-4 w-4 text-orange-300" /> 활성 수집 소스
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="grid gap-2">
+                    {crawlerTargets.map((item) => (
+                      <div key={item} className="flex items-center gap-3 rounded-2xl border border-white/8 bg-black/20 px-4 py-3 text-sm text-white/72">
+                        <div className="h-2 w-2 rounded-full bg-orange-400" />
+                        {item}
                       </div>
-                    ) : null}
+                    ))}
                   </CardContent>
                 </Card>
               </div>

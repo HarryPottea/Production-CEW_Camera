@@ -2,7 +2,6 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
-import { createClient } from "@supabase/supabase-js";
 import type { EquipmentItem, EquipmentStatus } from "../src/types";
 import { sourceConfigs, type SourceConfig } from "./sources";
 
@@ -18,10 +17,6 @@ type FeedCandidate = {
   brand: string;
   category: string;
 };
-
-function getEnv(name: string) {
-  return process.env[name]?.trim() || "";
-}
 
 function toStatus(publishedAt: string): EquipmentStatus {
   const published = new Date(publishedAt).getTime();
@@ -209,43 +204,6 @@ async function writeSnapshot(items: EquipmentItem[]) {
   console.log(`[write] saved ${items.length} items to ${path.relative(rootDir, outPath)}`);
 }
 
-async function syncToSupabase(items: EquipmentItem[]) {
-  const url = getEnv("VITE_SUPABASE_URL");
-  const serviceRoleKey = getEnv("SUPABASE_SERVICE_ROLE_KEY");
-
-  if (!url || !serviceRoleKey) {
-    console.log("[supabase] skipped (missing VITE_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY)");
-    return;
-  }
-
-  const supabase = createClient(url, serviceRoleKey);
-  const payload = items.map((item) => ({
-    id: item.id,
-    brand: item.brand,
-    model: item.model,
-    category: item.category,
-    announced_at: item.announced_at,
-    release_date: item.release_date,
-    status: item.status,
-    summary: item.summary,
-    news_url: item.news_url ?? item.official_url ?? null,
-    product_url: item.product_url ?? null,
-    official_url: item.official_url,
-    manual_url: item.manual_url,
-    firmware_url: item.firmware_url,
-    featured: item.featured ?? false,
-    is_published: item.is_published ?? true,
-    source_title: item.source_title ?? null,
-  }));
-
-  const { error } = await supabase.from("equipment").upsert(payload, { onConflict: "id" });
-  if (error) {
-    throw new Error(`[supabase] upsert failed: ${error.message}`);
-  }
-
-  console.log(`[supabase] synced ${payload.length} items`);
-}
-
 async function main() {
   const allCandidates = (await Promise.all(sourceConfigs.map((source) => collectFromSource(source)))).flat();
 
@@ -255,8 +213,6 @@ async function main() {
     .map(toEquipmentItem);
 
   await writeSnapshot(deduped);
-  await syncToSupabase(deduped);
-
   console.log(`[done] collected ${deduped.length} equipment news items`);
 }
 
