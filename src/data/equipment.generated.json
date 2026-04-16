@@ -468,24 +468,6 @@
     "source_title": "Blackmagic Cloud Store Max"
   },
   {
-    "id": "blackmagic-ethernet-switch-360p-2024-04-12",
-    "brand": "Blackmagic",
-    "model": "Ethernet Switch 360P",
-    "category": "기타 촬영장비",
-    "announced_at": "2024-04-12",
-    "release_date": null,
-    "status": "출시 완료",
-    "summary": "New Blackmagic Ethernet Switch 360P! World’s first Ethernet switch for the film and television industry with 10G Ethernet for SMPTE-2110 IP video and front panel routing! Available in July from US$2,895. Learn more at http://bmd.link/T9y9Hz",
-    "news_url": "https://www.blackmagicdesign.com/media/release/20241013-06",
-    "product_url": null,
-    "official_url": "https://www.blackmagicdesign.com/media/release/20241013-06",
-    "manual_url": null,
-    "firmware_url": null,
-    "featured": false,
-    "is_published": true,
-    "source_title": "Blackmagic Ethernet Switch 360P"
-  },
-  {
     "id": "blackmagic-media-player-2024-04-12",
     "brand": "Blackmagic",
     "model": "Media Player",
@@ -502,6 +484,24 @@
     "featured": false,
     "is_published": true,
     "source_title": "Blackmagic Media Player"
+  },
+  {
+    "id": "blackmagic-ethernet-switch-360p-2024-04-12",
+    "brand": "Blackmagic",
+    "model": "Ethernet Switch 360P",
+    "category": "기타 촬영장비",
+    "announced_at": "2024-04-12",
+    "release_date": null,
+    "status": "출시 완료",
+    "summary": "New Blackmagic Ethernet Switch 360P! World’s first Ethernet switch for the film and television industry with 10G Ethernet for SMPTE-2110 IP video and front panel routing! Available in July from US$2,895. Learn more at http://bmd.link/T9y9Hz",
+    "news_url": "https://www.blackmagicdesign.com/media/release/20241013-06",
+    "product_url": null,
+    "official_url": "https://www.blackmagicdesign.com/media/release/20241013-06",
+    "manual_url": null,
+    "firmware_url": null,
+    "featured": false,
+    "is_published": true,
+    "source_title": "Blackmagic Ethernet Switch 360P"
   },
   {
     "id": "blackmagic-2110-ip-converters-2024-04-12",
