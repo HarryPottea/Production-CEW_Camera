@@ -486,24 +486,6 @@
     "source_title": "Blackmagic Cloud Store Max"
   },
   {
-    "id": "blackmagic-media-player-2024-04-12",
-    "brand": "Blackmagic",
-    "model": "Media Player",
-    "category": "모니터/무선영상",
-    "announced_at": "2024-04-12",
-    "release_date": null,
-    "status": "출시 완료",
-    "summary": "Introducing Blackmagic Media Player 10G! A new Thunderbolt capture and playback solution for live production with 12G-SDI capture, fill and key video, extended desktop, plus 10G Ethernet and monitoring! Learn more at http://bmd.link/3tUHVX",
-    "news_url": "https://www.blackmagicdesign.com/media/release/20241013-08",
-    "product_url": null,
-    "official_url": "https://www.blackmagicdesign.com/media/release/20241013-08",
-    "manual_url": null,
-    "firmware_url": null,
-    "featured": false,
-    "is_published": true,
-    "source_title": "Blackmagic Media Player"
-  },
-  {
     "id": "blackmagic-ethernet-switch-360p-2024-04-12",
     "brand": "Blackmagic",
     "model": "Ethernet Switch 360P",
@@ -520,6 +502,24 @@
     "featured": false,
     "is_published": true,
     "source_title": "Blackmagic Ethernet Switch 360P"
+  },
+  {
+    "id": "blackmagic-media-player-2024-04-12",
+    "brand": "Blackmagic",
+    "model": "Media Player",
+    "category": "모니터/무선영상",
+    "announced_at": "2024-04-12",
+    "release_date": null,
+    "status": "출시 완료",
+    "summary": "Introducing Blackmagic Media Player 10G! A new Thunderbolt capture and playback solution for live production with 12G-SDI capture, fill and key video, extended desktop, plus 10G Ethernet and monitoring! Learn more at http://bmd.link/3tUHVX",
+    "news_url": "https://www.blackmagicdesign.com/media/release/20241013-08",
+    "product_url": null,
+    "official_url": "https://www.blackmagicdesign.com/media/release/20241013-08",
+    "manual_url": null,
+    "firmware_url": null,
+    "featured": false,
+    "is_published": true,
+    "source_title": "Blackmagic Media Player"
   },
   {
     "id": "blackmagic-2110-ip-converters-2024-04-12",
