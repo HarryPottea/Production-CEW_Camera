@@ -1,5 +1,23 @@
 [
   {
+    "id": "nikon-is-developing-the-nikkor-z-120-300mm-f-2-8-tc-vr-s-a-telephoto-zoom-lens-with-a--2026-05-07",
+    "brand": "Nikon",
+    "model": "is developing the NIKKOR Z 120-300mm f/2.8 TC VR S, a telephoto zoom lens with a built-in 1.4x teleconverter",
+    "category": "렌즈",
+    "announced_at": "2026-05-07",
+    "release_date": null,
+    "status": "발표",
+    "summary": "Nikon is developing the NIKKOR Z 120-300mm f/2.8 TC VR S, a telephoto zoom lens with a built-in 1.4x teleconverter",
+    "news_url": "https://www.nikon.com/company/news/2026/0507_imaging_01.html",
+    "product_url": null,
+    "official_url": "https://www.nikon.com/company/news/2026/0507_imaging_01.html",
+    "manual_url": null,
+    "firmware_url": null,
+    "featured": true,
+    "is_published": true,
+    "source_title": "Nikon is developing the NIKKOR Z 120-300mm f/2.8 TC VR S, a telephoto zoom lens with a built-in 1.4x teleconverter"
+  },
+  {
     "id": "sony-electronics-to-launch-r-series-of-system-cameras-2026-04-16",
     "brand": "Sony",
     "model": "Electronics to Launch \"R Series\" of System Cameras",
@@ -232,24 +250,6 @@
     "featured": false,
     "is_published": true,
     "source_title": "Introducing Blackmagic Camera ProDock!"
-  },
-  {
-    "id": "nikon-firmware-version-2-00-for-the-nikon-z6iii-full-frame-mirrorless-camera-2025-08-27",
-    "brand": "Nikon",
-    "model": "firmware version 2.00 for the Nikon Z6III full-frame mirrorless camera",
-    "category": "카메라",
-    "announced_at": "2025-08-27",
-    "release_date": null,
-    "status": "출시 완료",
-    "summary": "Nikon releases firmware version 2.00 for the Nikon Z6III full-frame mirrorless camera",
-    "news_url": "https://www.nikon.com/company/news/2025/0827_imaging_01.html",
-    "product_url": null,
-    "official_url": "https://www.nikon.com/company/news/2025/0827_imaging_01.html",
-    "manual_url": null,
-    "firmware_url": null,
-    "featured": false,
-    "is_published": true,
-    "source_title": "Nikon releases firmware version 2.00 for the Nikon Z6III full-frame mirrorless camera"
   },
   {
     "id": "blackmagic-media-player-10g-now-available-2025-08-08",
