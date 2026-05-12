@@ -1,5 +1,23 @@
 [
   {
+    "id": "sony-electronics-reon-pocket-pro-plus-wearable-thermo-device-with-advanced-cooling-an-2026-05-12",
+    "brand": "Sony",
+    "model": "Electronics REON POCKET PRO Plus Wearable Thermo Device with Advanced Cooling and Heating Technology",
+    "category": "기타 촬영장비",
+    "announced_at": "2026-05-12",
+    "release_date": null,
+    "status": "발표",
+    "summary": "Sony Electronics Launches REON POCKET PRO Plus Wearable Thermo Device with Advanced Cooling and Heating Technology",
+    "news_url": "https://sony.mediaroom.com/2026-05-12-Sony-Electronics-Launches-REON-POCKET-PRO-Plus-Wearable-Thermo-Device-with-Advanced-Cooling-and-Heating-Technology",
+    "product_url": null,
+    "official_url": "https://sony.mediaroom.com/2026-05-12-Sony-Electronics-Launches-REON-POCKET-PRO-Plus-Wearable-Thermo-Device-with-Advanced-Cooling-and-Heating-Technology",
+    "manual_url": null,
+    "firmware_url": null,
+    "featured": false,
+    "is_published": true,
+    "source_title": "Sony Electronics Launches REON POCKET PRO Plus Wearable Thermo Device with Advanced Cooling and Heating Technology"
+  },
+  {
     "id": "nikon-is-developing-the-nikkor-z-120-300mm-f-2-8-tc-vr-s-a-telephoto-zoom-lens-with-a--2026-05-07",
     "brand": "Nikon",
     "model": "is developing the NIKKOR Z 120-300mm f/2.8 TC VR S, a telephoto zoom lens with a built-in 1.4x teleconverter",
@@ -124,24 +142,6 @@
     "featured": false,
     "is_published": true,
     "source_title": "New Blackmagic Ethernet Switch 820!"
-  },
-  {
-    "id": "sony-now-available-sony-electronics-as-dt1-lidar-depth-sensor-2026-04-07",
-    "brand": "Sony",
-    "model": "Now Available: Sony Electronics' AS-DT1 LiDAR Depth Sensor",
-    "category": "카메라",
-    "announced_at": "2026-04-07",
-    "release_date": null,
-    "status": "발표",
-    "summary": "Now Available: Sony Electronics' AS-DT1 LiDAR Depth Sensor",
-    "news_url": "https://sony.mediaroom.com/2026-04-07-Now-Available-Sony-Electronics-AS-DT1-LiDAR-Depth-Sensor",
-    "product_url": null,
-    "official_url": "https://sony.mediaroom.com/2026-04-07-Now-Available-Sony-Electronics-AS-DT1-LiDAR-Depth-Sensor",
-    "manual_url": null,
-    "firmware_url": null,
-    "featured": false,
-    "is_published": true,
-    "source_title": "Now Available: Sony Electronics' AS-DT1 LiDAR Depth Sensor"
   },
   {
     "id": "nikon-the-nikkor-z-70-200mm-f-2-8-vr-s-ii-a-fast-telephoto-zoom-lens-that-combines-sig-2026-02-24",
