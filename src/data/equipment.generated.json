@@ -1,5 +1,23 @@
 [
   {
+    "id": "sony-electronics-1000x-the-collexion-where-iconic-sound-meets-refined-design-2026-05-19",
+    "brand": "Sony",
+    "model": "Electronics 1000X THE COLLEXION, Where Iconic Sound Meets Refined Design",
+    "category": "기타 촬영장비",
+    "announced_at": "2026-05-19",
+    "release_date": null,
+    "status": "발표",
+    "summary": "Sony Electronics Unveils 1000X THE COLLEXION, Where Iconic Sound Meets Refined Design",
+    "news_url": "https://sony.mediaroom.com/2026-05-19-Sony-Electronics-Unveils-1000X-THE-COLLEXION,-Where-Iconic-Sound-Meets-Refined-Design",
+    "product_url": null,
+    "official_url": "https://sony.mediaroom.com/2026-05-19-Sony-Electronics-Unveils-1000X-THE-COLLEXION,-Where-Iconic-Sound-Meets-Refined-Design",
+    "manual_url": null,
+    "firmware_url": null,
+    "featured": false,
+    "is_published": true,
+    "source_title": "Sony Electronics Unveils 1000X THE COLLEXION, Where Iconic Sound Meets Refined Design"
+  },
+  {
     "id": "sony-electronics-accelerates-high-resolution-photography-with-the-alpha-7r-vi-2026-05-13",
     "brand": "Sony",
     "model": "Electronics Accelerates High-Resolution Photography with the Alpha 7R VI",
@@ -70,24 +88,6 @@
     "featured": true,
     "is_published": true,
     "source_title": "Nikon is developing the NIKKOR Z 120-300mm f/2.8 TC VR S, a telephoto zoom lens with a built-in 1.4x teleconverter"
-  },
-  {
-    "id": "sony-electronics-to-launch-r-series-of-system-cameras-2026-04-16",
-    "brand": "Sony",
-    "model": "Electronics to Launch \"R Series\" of System Cameras",
-    "category": "카메라",
-    "announced_at": "2026-04-16",
-    "release_date": null,
-    "status": "발표",
-    "summary": "Sony Electronics to Launch \"R Series\" of System Cameras",
-    "news_url": "https://sony.mediaroom.com/2026-04-16-Sony-Electronics-to-Launch-R-Series-of-System-Cameras",
-    "product_url": null,
-    "official_url": "https://sony.mediaroom.com/2026-04-16-Sony-Electronics-to-Launch-R-Series-of-System-Cameras",
-    "manual_url": null,
-    "firmware_url": null,
-    "featured": false,
-    "is_published": true,
-    "source_title": "Sony Electronics to Launch \"R Series\" of System Cameras"
   },
   {
     "id": "blackmagic-introducing-blackmagic-ursa-cine-12k-lf-100g-2026-04-13",
