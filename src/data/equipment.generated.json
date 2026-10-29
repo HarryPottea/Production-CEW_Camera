@@ -1,5 +1,23 @@
 [
   {
+    "id": "sony-electronics-to-launch-rialto-65-camera-extension-system-expanding-the-venice-2-c-2026-10-29",
+    "brand": "Sony",
+    "model": "Electronics to Launch RIALTO 65 Camera Extension System, Expanding the VENICE 2 Camera to the 65mm Format",
+    "category": "시네마 카메라",
+    "announced_at": "2026-10-29",
+    "release_date": null,
+    "status": "발표",
+    "summary": "Sony Electronics to Launch RIALTO 65 Camera Extension System, Expanding the VENICE 2 Camera to the 65mm Format",
+    "news_url": "https://sony.mediaroom.com/2026-10-29-Sony-Electronics-to-Launch-RIALTO-65-Camera-Extension-System,-Expanding-the-VENICE-2-Camera-to-the-65mm-Format",
+    "product_url": null,
+    "official_url": "https://sony.mediaroom.com/2026-10-29-Sony-Electronics-to-Launch-RIALTO-65-Camera-Extension-System,-Expanding-the-VENICE-2-Camera-to-the-65mm-Format",
+    "manual_url": null,
+    "firmware_url": null,
+    "featured": true,
+    "is_published": true,
+    "source_title": "Sony Electronics to Launch RIALTO 65 Camera Extension System, Expanding the VENICE 2 Camera to the 65mm Format"
+  },
+  {
     "id": "sony-electronics-updates-its-premium-walkman-lineup-including-new-signature-series-wa-2026-10-15",
     "brand": "Sony",
     "model": "Electronics Updates its Premium Walkman® Lineup Including New Signature Series Walkman® NW-WM1ZM3, NW-WM1AM3 and NW-ZX90",
@@ -34,24 +52,6 @@
     "featured": false,
     "is_published": true,
     "source_title": "Sony Electronics Introduces the ECM-W5 Wireless Microphone with High-Resolution Audio Recording and Stable Connectivity"
-  },
-  {
-    "id": "sony-electronics-the-world-s-first-eclipsa-audio-certified-spatial-audio-microphone-f-2026-10-08",
-    "brand": "Sony",
-    "model": "Electronics the World's First Eclipsa Audio Certified Spatial Audio Microphone for Smartphones¹",
-    "category": "오디오",
-    "announced_at": "2026-10-08",
-    "release_date": null,
-    "status": "발표",
-    "summary": "Sony Electronics Announces the World's First Eclipsa Audio Certified Spatial Audio Microphone for Smartphones¹",
-    "news_url": "https://sony.mediaroom.com/2026-10-08-Sony-Electronics-Announces-the-Worlds-First-Eclipsa-Audio-Certified-Spatial-Audio-Microphone-for-Smartphones1",
-    "product_url": null,
-    "official_url": "https://sony.mediaroom.com/2026-10-08-Sony-Electronics-Announces-the-Worlds-First-Eclipsa-Audio-Certified-Spatial-Audio-Microphone-for-Smartphones1",
-    "manual_url": null,
-    "firmware_url": null,
-    "featured": false,
-    "is_published": true,
-    "source_title": "Sony Electronics Announces the World's First Eclipsa Audio Certified Spatial Audio Microphone for Smartphones¹"
   },
   {
     "id": "blackmagic-upgrade-to-ultra-hd-special-2026-09-08",
