@@ -1,5 +1,23 @@
 [
   {
+    "id": "sony-electronics-mdr-3r-usb-c-wired-headphones-a-modern-take-on-the-first-walkman-hea-2026-11-05",
+    "brand": "Sony",
+    "model": "Electronics MDR-3R USB-C®*¹ Wired Headphones, a Modern Take on the First Walkman® Headphones MDR-3",
+    "category": "기타 촬영장비",
+    "announced_at": "2026-11-05",
+    "release_date": null,
+    "status": "발표",
+    "summary": "Sony Electronics Introduces MDR-3R USB-C®*¹ Wired Headphones, a Modern Take on the First Walkman® Headphones MDR-3",
+    "news_url": "https://sony.mediaroom.com/2026-11-05-Sony-Electronics-Introduces-MDR-3R-USB-C-R-1-Wired-Headphones,-a-Modern-Take-on-the-First-Walkman-R-Headphones-MDR-3",
+    "product_url": null,
+    "official_url": "https://sony.mediaroom.com/2026-11-05-Sony-Electronics-Introduces-MDR-3R-USB-C-R-1-Wired-Headphones,-a-Modern-Take-on-the-First-Walkman-R-Headphones-MDR-3",
+    "manual_url": null,
+    "firmware_url": null,
+    "featured": false,
+    "is_published": true,
+    "source_title": "Sony Electronics Introduces MDR-3R USB-C®*¹ Wired Headphones, a Modern Take on the First Walkman® Headphones MDR-3"
+  },
+  {
     "id": "sony-electronics-to-launch-rialto-65-camera-extension-system-expanding-the-venice-2-c-2026-10-29",
     "brand": "Sony",
     "model": "Electronics to Launch RIALTO 65 Camera Extension System, Expanding the VENICE 2 Camera to the 65mm Format",
@@ -34,24 +52,6 @@
     "featured": false,
     "is_published": true,
     "source_title": "Sony Electronics Updates its Premium Walkman® Lineup Including New Signature Series Walkman® NW-WM1ZM3, NW-WM1AM3 and NW-ZX900 Digital Media Players"
-  },
-  {
-    "id": "sony-electronics-the-ecm-w5-wireless-microphone-with-high-resolution-audio-recording--2026-10-14",
-    "brand": "Sony",
-    "model": "Electronics the ECM-W5 Wireless Microphone with High-Resolution Audio Recording and Stable Connectivity",
-    "category": "모니터/무선영상",
-    "announced_at": "2026-10-14",
-    "release_date": null,
-    "status": "발표",
-    "summary": "Sony Electronics Introduces the ECM-W5 Wireless Microphone with High-Resolution Audio Recording and Stable Connectivity",
-    "news_url": "https://sony.mediaroom.com/2026-10-14-Sony-Electronics-Introduces-the-ECM-W5-Wireless-Microphone-with-High-Resolution-Audio-Recording-and-Stable-Connectivity",
-    "product_url": null,
-    "official_url": "https://sony.mediaroom.com/2026-10-14-Sony-Electronics-Introduces-the-ECM-W5-Wireless-Microphone-with-High-Resolution-Audio-Recording-and-Stable-Connectivity",
-    "manual_url": null,
-    "firmware_url": null,
-    "featured": false,
-    "is_published": true,
-    "source_title": "Sony Electronics Introduces the ECM-W5 Wireless Microphone with High-Resolution Audio Recording and Stable Connectivity"
   },
   {
     "id": "blackmagic-upgrade-to-ultra-hd-special-2026-09-08",
